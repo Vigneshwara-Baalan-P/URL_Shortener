@@ -11,7 +11,8 @@ import {
   Clipboard, 
   FileText, 
   ArrowRight,
-  ShieldAlert
+  Target,
+  Megaphone
 } from 'lucide-react';
 
 export const URLShortener = () => {
@@ -24,6 +25,13 @@ export const URLShortener = () => {
   const [expiresAt, setExpiresAt] = useState('');
   const [tagsInput, setTagsInput] = useState('');
   const [notes, setNotes] = useState('');
+
+  // UTM Parameters State
+  const [showUtmBuilder, setShowUtmBuilder] = useState(false);
+  const [utmSource, setUtmSource] = useState('');
+  const [utmMedium, setUtmMedium] = useState('');
+  const [utmCampaign, setUtmCampaign] = useState('');
+
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [latestCreatedUrl, setLatestCreatedUrl] = useState(null);
 
@@ -39,6 +47,27 @@ export const URLShortener = () => {
     }
   };
 
+  const getFinalDestinationUrl = () => {
+    let base = longUrl.trim();
+    if (!base) return '';
+    if (!/^https?:\/\//i.test(base)) {
+      base = 'https://' + base;
+    }
+
+    if (utmSource || utmMedium || utmCampaign) {
+      try {
+        const urlObj = new URL(base);
+        if (utmSource) urlObj.searchParams.set('utm_source', utmSource.trim());
+        if (utmMedium) urlObj.searchParams.set('utm_medium', utmMedium.trim());
+        if (utmCampaign) urlObj.searchParams.set('utm_campaign', utmCampaign.trim());
+        return urlObj.toString();
+      } catch (e) {
+        return base;
+      }
+    }
+    return base;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!longUrl.trim()) {
@@ -46,13 +75,15 @@ export const URLShortener = () => {
       return;
     }
 
+    const finalTargetUrl = getFinalDestinationUrl();
+
     const tags = tagsInput
       .split(',')
       .map((t) => t.trim())
       .filter((t) => t.length > 0);
 
     const created = addUrl({
-      longUrl,
+      longUrl: finalTargetUrl,
       customSlug,
       title,
       tags,
@@ -71,12 +102,15 @@ export const URLShortener = () => {
       setExpiresAt('');
       setTagsInput('');
       setNotes('');
+      setUtmSource('');
+      setUtmMedium('');
+      setUtmCampaign('');
     }
   };
 
   return (
-    <div style={{ maxWidth: '840px', margin: '0 auto', padding: '2rem 1rem' }}>
-      {/* Hero Header */}
+    <div style={{ maxWidth: '880px', margin: '0 auto', padding: '2rem 1rem' }}>
+      {/* Hero Header matching urlshort.dev branding */}
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
         <div
           style={{
@@ -93,31 +127,31 @@ export const URLShortener = () => {
             marginBottom: '1rem'
           }}
         >
-          <Sparkles size={14} /> Lightning Fast Short Links & Real-Time Analytics
+          <Sparkles size={14} /> Smart Link Shortener & Campaign Management
         </div>
 
         <h1
           style={{
-            fontSize: 'clamp(2.2rem, 5vw, 3.2rem)',
+            fontSize: 'clamp(2.2rem, 5vw, 3.4rem)',
             fontWeight: 800,
             letterSpacing: '-1px',
             lineHeight: 1.15,
             marginBottom: '1rem'
           }}
         >
-          Shorten, Share & Track <br />
-          <span className="gradient-text">Your Web Links Intelligently</span>
+          Create Short Links & <br />
+          <span className="gradient-text">Trackable Marketing Campaigns</span>
         </h1>
 
         <p
           style={{
             color: 'var(--text-muted)',
             fontSize: '1.05rem',
-            maxWidth: '560px',
+            maxWidth: '600px',
             margin: '0 auto'
           }}
         >
-          Transform long, cluttered web addresses into sleek, brandable short links with password security, QR code styling, and click tracking.
+          Transform long URLs into powerful marketing assets with real-time analytics, custom aliases, QR Code styling, and password security.
         </p>
       </div>
 
@@ -158,7 +192,7 @@ export const URLShortener = () => {
                   id="main-url-input"
                   type="text"
                   className="glass-input"
-                  placeholder="https://example.com/very-long-url-path-query-parameters"
+                  placeholder="https://example.com/my-long-landing-page"
                   value={longUrl}
                   onChange={(e) => setLongUrl(e.target.value)}
                   style={{ paddingLeft: '2.75rem', paddingRight: '4rem', fontSize: '1rem' }}
@@ -191,37 +225,117 @@ export const URLShortener = () => {
               </div>
 
               <button type="submit" className="btn-primary" style={{ padding: '0.85rem 2rem' }}>
-                <span>Shorten</span>
+                <span>Shorten Link</span>
                 <ArrowRight size={18} />
               </button>
             </div>
           </div>
 
-          {/* Advanced Options Toggle */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
-            <button
-              type="button"
-              onClick={() => setShowAdvanced(!showAdvanced)}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: showAdvanced ? '#38bdf8' : 'var(--text-muted)',
-                fontSize: '0.88rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                padding: '0.25rem 0'
-              }}
-            >
-              <SlidersHorizontal size={16} />
-              <span>{showAdvanced ? 'Hide Custom Options' : 'Custom Alias, Password & Expiry Options'}</span>
-            </button>
+          {/* Action Bar Toggle Row */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginTop: '1rem' }}>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button
+                type="button"
+                onClick={() => setShowAdvanced(!showAdvanced)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: showAdvanced ? '#38bdf8' : 'var(--text-muted)',
+                  fontSize: '0.88rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem'
+                }}
+              >
+                <SlidersHorizontal size={16} />
+                <span>{showAdvanced ? 'Hide Custom Options' : 'Custom Slug, Passcode & Expiry'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowUtmBuilder(!showUtmBuilder)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: showUtmBuilder ? '#a855f7' : 'var(--text-muted)',
+                  fontSize: '0.88rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem'
+                }}
+              >
+                <Target size={16} />
+                <span>{showUtmBuilder ? 'Hide UTM Builder' : 'UTM Campaign Builder'}</span>
+              </button>
+            </div>
+
             <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Domain: snap.link/</span>
           </div>
 
-          {/* Expanded Options Form Grid */}
+          {/* UTM Campaign Builder Expandable Box */}
+          {showUtmBuilder && (
+            <div
+              className="animate-fade-in"
+              style={{
+                marginTop: '1.25rem',
+                padding: '1.25rem',
+                borderRadius: '14px',
+                background: 'rgba(168, 85, 247, 0.06)',
+                border: '1px solid rgba(168, 85, 247, 0.25)',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '1rem'
+              }}
+            >
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#c084fc', marginBottom: '0.3rem' }}>
+                  UTM Source
+                </label>
+                <input
+                  type="text"
+                  className="glass-input"
+                  placeholder="google, newsletter, twitter"
+                  value={utmSource}
+                  onChange={(e) => setUtmSource(e.target.value)}
+                  style={{ fontSize: '0.85rem' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#c084fc', marginBottom: '0.3rem' }}>
+                  UTM Medium
+                </label>
+                <input
+                  type="text"
+                  className="glass-input"
+                  placeholder="cpc, banner, email"
+                  value={utmMedium}
+                  onChange={(e) => setUtmMedium(e.target.value)}
+                  style={{ fontSize: '0.85rem' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#c084fc', marginBottom: '0.3rem' }}>
+                  UTM Campaign
+                </label>
+                <input
+                  type="text"
+                  className="glass-input"
+                  placeholder="summer_sale, launch_2026"
+                  value={utmCampaign}
+                  onChange={(e) => setUtmCampaign(e.target.value)}
+                  style={{ fontSize: '0.85rem' }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Advanced Options Form Grid */}
           {showAdvanced && (
             <div
               className="animate-fade-in"
@@ -256,7 +370,7 @@ export const URLShortener = () => {
                   <input
                     type="text"
                     className="glass-input"
-                    placeholder="my-custom-name"
+                    placeholder="my-brand-slug"
                     value={customSlug}
                     onChange={(e) => setCustomSlug(e.target.value.replace(/[^a-zA-Z0-9_-]/g, ''))}
                     style={{ borderRadius: '0 14px 14px 0' }}
@@ -272,7 +386,7 @@ export const URLShortener = () => {
                 <input
                   type="text"
                   className="glass-input"
-                  placeholder="e.g. Summer Campaign Portfolio"
+                  placeholder="e.g. Q4 Marketing Campaign"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
@@ -298,7 +412,7 @@ export const URLShortener = () => {
                   <input
                     type="password"
                     className="glass-input"
-                    placeholder="Enter password..."
+                    placeholder="Enter passcode..."
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     style={{ paddingLeft: '2.5rem' }}
@@ -353,7 +467,7 @@ export const URLShortener = () => {
                   <input
                     type="text"
                     className="glass-input"
-                    placeholder="Marketing, Social, Q3"
+                    placeholder="Marketing, Social, Campaign"
                     value={tagsInput}
                     onChange={(e) => setTagsInput(e.target.value)}
                     style={{ paddingLeft: '2.5rem' }}
@@ -381,7 +495,7 @@ export const URLShortener = () => {
                   <input
                     type="text"
                     className="glass-input"
-                    placeholder="Target audience details..."
+                    placeholder="Internal details..."
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     style={{ paddingLeft: '2.5rem' }}
