@@ -4,84 +4,61 @@ import { ChevronDown, HelpCircle } from 'lucide-react';
 export const FaqSection = () => {
   const faqs = [
     {
-      q: 'How does link shortening work on LinkShort?',
-      a: 'Simply paste your long destination URL into the input field. LinkShort generates a clean, compact short code (or custom slug) that redirects visitors to the original webpage while tracking clicks, referrers, and device analytics.'
+      q: 'How does link shortening work?',
+      a: 'Paste your long URL into the search box. Google URLShort creates a compact short code (or custom slug) that redirects visitors to the original webpage while tracking clicks and referrers.'
     },
     {
       q: 'Can I customize the short URL alias?',
-      a: 'Yes! Expand the custom options to specify a vanity alias like snap.link/my-product or snap.link/summer-sale.'
+      a: 'Yes, expand the options to enter a custom slug like snap.link/my-product or snap.link/summer-sale.'
     },
     {
       q: 'How does passcode protection work?',
-      a: 'When passcode protection is enabled, anyone clicking the short link will be prompted for the passcode before being redirected to the target destination.'
+      a: 'When passcode protection is set, visitors attempting to open the short link must enter the passcode to be redirected.'
     },
     {
-      q: 'Can I generate and download QR Codes for my links?',
-      a: 'Absolutely. Every short link includes a built-in QR Code generator. You can customize the colors, view SVG preview, and download high-resolution PNG images.'
+      q: 'Can I generate and download QR Codes?',
+      a: 'Yes! Every link includes a built-in QR Code generator with color controls and PNG image downloads.'
     },
     {
       q: 'What analytics metrics are tracked?',
-      a: 'You can monitor total clicks, clicks timeline over time, referrer traffic sources (Google, Social, Direct), device distribution (Desktop, Mobile, Tablet), and visitor country demographics.'
-    },
-    {
-      q: 'Are my links permanent?',
-      a: 'Yes, created links remain active permanently unless you explicitly configure an expiration date or delete the link from your Link Library.'
+      a: 'Track total clicks, engagement timeline, referrers (Google, Twitter, Direct), device distribution, and location demographics.'
     }
   ];
 
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section style={{ maxWidth: '840px', margin: '4rem auto 2rem auto', padding: '0 1.5rem' }}>
+    <section style={{ maxWidth: '800px', margin: '4rem auto 2rem auto', padding: '0 1.5rem' }}>
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.35rem 0.85rem',
-            borderRadius: '999px',
-            background: 'rgba(99, 102, 241, 0.12)',
-            border: '1px solid rgba(99, 102, 241, 0.25)',
-            color: '#a5b4fc',
-            fontSize: '0.82rem',
-            fontWeight: 600,
-            marginBottom: '0.75rem'
-          }}
-        >
-          <HelpCircle size={14} /> Got Questions?
-        </div>
-
-        <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#fff', marginBottom: '0.5rem' }}>
+        <h2 style={{ fontSize: '1.8rem', fontWeight: 700, color: '#1f1f1f', marginBottom: '0.5rem' }}>
           Frequently Asked Questions
         </h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-          Find quick answers to common questions about short links, tracking, and QR code tools.
+        <p style={{ color: '#444746', fontSize: '0.95rem' }}>
+          Quick answers about short links, QR codes, and analytics.
         </p>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
         {faqs.map((faq, idx) => {
           const isOpen = openIndex === idx;
           return (
             <div
               key={idx}
-              className="glass-panel"
+              className="google-card"
               style={{
-                borderRadius: '14px',
-                overflow: 'hidden',
-                border: isOpen ? '1px solid rgba(99, 102, 241, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)'
+                borderRadius: '16px',
+                overflow: 'hidden'
               }}
             >
               <button
                 onClick={() => setOpenIndex(isOpen ? null : idx)}
                 style={{
                   width: '100%',
-                  padding: '1.25rem 1.5rem',
+                  padding: '1.15rem 1.5rem',
                   background: 'none',
                   border: 'none',
-                  color: '#fff',
-                  fontSize: '1.02rem',
+                  color: '#1f1f1f',
+                  fontSize: '1rem',
                   fontWeight: 600,
                   textAlign: 'left',
                   cursor: 'pointer',
@@ -94,10 +71,10 @@ export const FaqSection = () => {
                 <span>{faq.q}</span>
                 <ChevronDown
                   size={18}
-                  color="var(--text-muted)"
+                  color="#5f6368"
                   style={{
                     transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                    transition: 'transform 0.3s ease'
+                    transition: 'transform 0.25s ease'
                   }}
                 />
               </button>
@@ -106,11 +83,11 @@ export const FaqSection = () => {
                 <div
                   className="animate-fade-in"
                   style={{
-                    padding: '0 1.5rem 1.25rem 1.5rem',
-                    color: 'var(--text-muted)',
+                    padding: '0 1.5rem 1.15rem 1.5rem',
+                    color: '#444746',
                     fontSize: '0.92rem',
                     lineHeight: 1.6,
-                    borderTop: '1px solid rgba(255,255,255,0.05)',
+                    borderTop: '1px solid #f1f3f4',
                     paddingTop: '0.85rem'
                   }}
                 >

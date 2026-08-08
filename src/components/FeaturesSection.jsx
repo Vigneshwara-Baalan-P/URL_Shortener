@@ -5,8 +5,6 @@ import {
   QrCode, 
   Target, 
   Lock, 
-  Globe, 
-  Layers, 
   ShieldCheck 
 } from 'lucide-react';
 
@@ -14,50 +12,50 @@ export const FeaturesSection = () => {
   const features = [
     {
       icon: Zap,
-      color: '#3b82f6',
+      color: '#0b57d0',
       title: 'Smart Link Shortener',
-      description: 'Transform long cluttered URLs into memorable short links with custom slug aliases, password protection, and auto-expiration.'
+      description: 'Create memorable short URLs with custom aliases, password protection, and auto-expiration.'
     },
     {
       icon: BarChart3,
-      color: '#10b981',
+      color: '#146c2e',
       title: 'Real-Time Analytics',
-      description: 'Track clicks live with comprehensive breakdown charts by device type, referrer source, hourly timeline, and geographic location.'
+      description: 'Track clicks live with detailed charts by device, referrer source, timeline, and geographic location.'
     },
     {
       icon: QrCode,
-      color: '#06b6d4',
+      color: '#0284c7',
       title: 'Custom QR Code Studio',
-      description: 'Generate high-resolution SVG and PNG QR codes with customizable color schemes and foreground styling.'
+      description: 'Generate high-resolution PNG & SVG QR codes with custom color styling.'
     },
     {
       icon: Target,
-      color: '#a855f7',
+      color: '#7e22ce',
       title: 'UTM Campaign Builder',
-      description: 'Attach Google Analytics UTM parameters (source, medium, campaign) automatically to track marketing performance.'
+      description: 'Automatically attach Google Analytics UTM parameters (source, medium, campaign) to track campaigns.'
     },
     {
       icon: Lock,
-      color: '#f59e0b',
-      title: 'Passcode Security',
-      description: 'Encrypt sensitive link destinations with passcode protection so only authorized users can access the redirect.'
+      color: '#b45309',
+      title: 'Passcode Protection',
+      description: 'Encrypt link destinations with passcode security so only authorized users can access the redirect.'
     },
     {
-      icon: Layers,
-      color: '#f43f5e',
-      title: 'Bulk Processing Engine',
-      description: 'Shorten up to 20 web links simultaneously via copy-paste or by uploading TXT/CSV campaign spreadsheets.'
+      icon: ShieldCheck,
+      color: '#b3261e',
+      title: 'Redirect Simulator',
+      description: 'Test routing, expiration checks, and passcode entry directly inside the browser.'
     }
   ];
 
   return (
-    <section style={{ maxWidth: '1280px', margin: '4rem auto 2rem auto', padding: '0 1.5rem' }}>
+    <section style={{ maxWidth: '1200px', margin: '4rem auto 2rem auto', padding: '0 1.5rem' }}>
       <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-        <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#fff', marginBottom: '0.75rem' }}>
-          Everything You Need to <span className="gradient-text">Manage & Scale Links</span>
+        <h2 style={{ fontSize: '2rem', fontWeight: 700, color: '#1f1f1f', marginBottom: '0.5rem' }}>
+          Key Features & Platform Capabilities
         </h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: '600px', margin: '0 auto' }}>
-          Designed for creators, digital marketers, and tech teams who need complete control over link tracking and digital assets.
+        <p style={{ color: '#444746', fontSize: '1rem', maxWidth: '580px', margin: '0 auto' }}>
+          Everything you need to create, manage, and analyze trackable short links.
         </p>
       </div>
 
@@ -73,36 +71,33 @@ export const FeaturesSection = () => {
           return (
             <div
               key={idx}
-              className="glass-panel"
+              className="google-card"
               style={{
                 padding: '1.75rem',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '1rem',
-                background: 'rgba(18, 24, 40, 0.65)',
-                border: '1px solid rgba(255, 255, 255, 0.08)'
+                gap: '0.85rem'
               }}
             >
               <div
                 style={{
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '12px',
-                  background: `${item.color}15`,
-                  border: `1px solid ${item.color}35`,
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '50%',
+                  background: '#f1f3f4',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}
               >
-                <Icon size={24} color={item.color} />
+                <Icon size={22} color={item.color} />
               </div>
 
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#fff' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1f1f1f' }}>
                 {item.title}
               </h3>
 
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+              <p style={{ fontSize: '0.9rem', color: '#444746', lineHeight: 1.6 }}>
                 {item.description}
               </p>
             </div>

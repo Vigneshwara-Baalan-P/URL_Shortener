@@ -21,30 +21,21 @@ import {
   Smartphone, 
   Share2, 
   TrendingUp, 
-  Filter,
-  Sparkles
+  Filter
 } from 'lucide-react';
 
 export const AnalyticsDashboard = () => {
   const { urls, selectedUrlForAnalytics, setSelectedUrlForAnalytics } = useUrl();
-
   const [activeLinkId, setActiveLinkId] = useState(selectedUrlForAnalytics || 'ALL');
 
-  // Selected object or global
   const selectedUrlObj = urls.find((u) => u.id === activeLinkId);
-
-  // Compute aggregate stats
   const totalClicks = urls.reduce((sum, u) => sum + (u.clicks || 0), 0);
   const totalLinks = urls.length;
   const avgClicks = totalLinks > 0 ? (totalClicks / totalLinks).toFixed(1) : 0;
-
-  // Find top link
   const topLink = urls.length > 0 ? [...urls].sort((a, b) => b.clicks - a.clicks)[0] : null;
 
-  // Compile timeline data
   let chartTimeline = [];
   if (activeLinkId === 'ALL') {
-    // Merge all clicks histories
     const historyMap = {};
     urls.forEach((u) => {
       (u.clicksHistory || []).forEach((h) => {
@@ -58,7 +49,6 @@ export const AnalyticsDashboard = () => {
     chartTimeline = selectedUrlObj.clicksHistory || [];
   }
 
-  // Compile Device distribution data
   let deviceMap = {};
   if (activeLinkId === 'ALL') {
     urls.forEach((u) => {
@@ -71,7 +61,6 @@ export const AnalyticsDashboard = () => {
   }
   const devicePieData = Object.entries(deviceMap).map(([name, value]) => ({ name, value }));
 
-  // Compile Referrer data
   let referrerMap = {};
   if (activeLinkId === 'ALL') {
     urls.forEach((u) => {
@@ -84,7 +73,6 @@ export const AnalyticsDashboard = () => {
   }
   const referrerBarData = Object.entries(referrerMap).map(([name, clicks]) => ({ name, clicks }));
 
-  // Compile Country data
   let countryMap = {};
   if (activeLinkId === 'ALL') {
     urls.forEach((u) => {
@@ -99,32 +87,31 @@ export const AnalyticsDashboard = () => {
     .sort((a, b) => b[1] - a[1])
     .map(([country, count]) => ({ country, count }));
 
-  const COLORS = ['#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#a855f7'];
+  const COLORS = ['#0b57d0', '#146c2e', '#0284c7', '#b45309', '#7e22ce'];
 
   return (
-    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem' }}>
-      {/* Header Bar */}
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1.5rem' }}>
+      {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#fff', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <BarChart3 size={28} color="#06b6d4" /> Analytics & Click Intelligence
+          <h1 style={{ fontSize: '1.8rem', fontWeight: 700, color: '#1f1f1f', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <BarChart3 size={26} color="#0b57d0" /> Analytics Dashboard
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '0.25rem' }}>
-            Monitor real-time engagement traffic, device breakdowns, referrers, and geo metrics.
+          <p style={{ color: '#444746', fontSize: '0.95rem', marginTop: '0.2rem' }}>
+            Real-time engagement stats, referrers, device breakdown, and geo metrics.
           </p>
         </div>
 
-        {/* Link Inspector Selector */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Filter size={16} color="var(--text-dim)" />
+          <Filter size={16} color="#5f6368" />
           <select
             value={activeLinkId}
             onChange={(e) => {
               setActiveLinkId(e.target.value);
               setSelectedUrlForAnalytics(e.target.value === 'ALL' ? null : e.target.value);
             }}
-            className="glass-input"
-            style={{ minWidth: '240px', cursor: 'pointer', fontWeight: 600 }}
+            className="google-input"
+            style={{ minWidth: '240px', cursor: 'pointer', borderRadius: '20px', fontWeight: 600 }}
           >
             <option value="ALL">🌐 Overview - All Links Combined</option>
             {urls.map((u) => (
@@ -136,213 +123,111 @@ export const AnalyticsDashboard = () => {
         </div>
       </div>
 
-      {/* KPI Cards Row */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '1.25rem',
-          marginBottom: '2rem'
-        }}
-      >
-        {/* Card 1 */}
-        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+      {/* KPI Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginBottom: '2rem' }}>
+        <div className="google-card" style={{ padding: '1.25rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Total Clicks</span>
-            <div style={{ background: 'rgba(99, 102, 241, 0.15)', padding: '0.4rem', borderRadius: '10px' }}>
-              <MousePointerClick size={18} color="#818cf8" />
-            </div>
+            <span style={{ fontSize: '0.85rem', color: '#444746' }}>Total Clicks</span>
+            <MousePointerClick size={18} color="#0b57d0" />
           </div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#fff' }}>
+          <div style={{ fontSize: '1.8rem', fontWeight: 700, color: '#1f1f1f' }}>
             {activeLinkId === 'ALL' ? totalClicks : selectedUrlObj?.clicks || 0}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#34d399', display: 'flex', alignItems: 'center', gap: '0.2rem', marginTop: '0.4rem' }}>
-            <TrendingUp size={12} /> Live click tracking active
+          <div style={{ fontSize: '0.75rem', color: '#146c2e', marginTop: '0.4rem', fontWeight: 500 }}>
+            Live tracking active
           </div>
         </div>
 
-        {/* Card 2 */}
-        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+        <div className="google-card" style={{ padding: '1.25rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Active Short Links</span>
-            <div style={{ background: 'rgba(6, 182, 212, 0.15)', padding: '0.4rem', borderRadius: '10px' }}>
-              <Link2 size={18} color="#22d3ee" />
-            </div>
+            <span style={{ fontSize: '0.85rem', color: '#444746' }}>Active Links</span>
+            <Link2 size={18} color="#0284c7" />
           </div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#fff' }}>
+          <div style={{ fontSize: '1.8rem', fontWeight: 700, color: '#1f1f1f' }}>
             {activeLinkId === 'ALL' ? totalLinks : 1}
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.4rem' }}>
-            Avg {avgClicks} clicks per link
+          <div style={{ fontSize: '0.75rem', color: '#747775', marginTop: '0.4rem' }}>
+            Avg {avgClicks} clicks / link
           </div>
         </div>
 
-        {/* Card 3 */}
-        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+        <div className="google-card" style={{ padding: '1.25rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Top Performing Link</span>
-            <div style={{ background: 'rgba(16, 185, 129, 0.15)', padding: '0.4rem', borderRadius: '10px' }}>
-              <Sparkles size={18} color="#34d399" />
-            </div>
+            <span style={{ fontSize: '0.85rem', color: '#444746' }}>Top Performing</span>
+            <TrendingUp size={18} color="#146c2e" />
           </div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1f1f1f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {topLink ? topLink.title : 'N/A'}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#38bdf8', marginTop: '0.4rem' }}>
-            {topLink ? `${topLink.clicks} clicks (${topLink.shortCode})` : 'No data'}
+          <div style={{ fontSize: '0.75rem', color: '#0b57d0', marginTop: '0.4rem', fontWeight: 500 }}>
+            {topLink ? `${topLink.clicks} clicks` : 'No data'}
           </div>
         </div>
 
-        {/* Card 4 */}
-        <div className="glass-panel" style={{ padding: '1.25rem' }}>
+        <div className="google-card" style={{ padding: '1.25rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Top Geo Region</span>
-            <div style={{ background: 'rgba(168, 85, 247, 0.15)', padding: '0.4rem', borderRadius: '10px' }}>
-              <Globe size={18} color="#c084fc" />
-            </div>
+            <span style={{ fontSize: '0.85rem', color: '#444746' }}>Top Region</span>
+            <Globe size={18} color="#7e22ce" />
           </div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#fff' }}>
+          <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#1f1f1f' }}>
             {countryBarData.length > 0 ? countryBarData[0].country : 'Global'}
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.4rem' }}>
+          <div style={{ fontSize: '0.75rem', color: '#747775', marginTop: '0.4rem' }}>
             {countryBarData.length > 0 ? `${countryBarData[0].count} clicks` : 'No data'}
           </div>
         </div>
       </div>
 
-      {/* Main Charts Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-        {/* Chart 1: Timeline area chart */}
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <TrendingUp size={18} color="#818cf8" /> Clicks Engagement Timeline
+      {/* Charts Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '1.5rem' }}>
+        <div className="google-card" style={{ padding: '1.5rem' }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1f1f1f', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <TrendingUp size={18} color="#0b57d0" /> Clicks Timeline
           </h3>
 
-          <div style={{ width: '100%', height: '280px' }}>
+          <div style={{ width: '100%', height: '260px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartTimeline}>
                 <defs>
                   <linearGradient id="colorClicks" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.5} />
-                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#0b57d0" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#0b57d0" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="date" stroke="#6b7280" fontSize={12} tickLine={false} />
-                <YAxis stroke="#6b7280" fontSize={12} tickLine={false} />
-                <Tooltip
-                  contentStyle={{
-                    background: 'rgba(18, 24, 38, 0.95)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '10px',
-                    color: '#fff'
-                  }}
-                />
-                <Area type="monotone" dataKey="clicks" stroke="#6366f1" strokeWidth={3} fillOpacity={1} fill="url(#colorClicks)" />
+                <XAxis dataKey="date" stroke="#747775" fontSize={12} tickLine={false} />
+                <YAxis stroke="#747775" fontSize={12} tickLine={false} />
+                <Tooltip contentStyle={{ background: '#ffffff', border: '1px solid #dadce0', borderRadius: '8px', color: '#1f1f1f' }} />
+                <Area type="monotone" dataKey="clicks" stroke="#0b57d0" strokeWidth={3} fillOpacity={1} fill="url(#colorClicks)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Chart 2: Device Pie Chart */}
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Smartphone size={18} color="#06b6d4" /> Device Breakdown
+        <div className="google-card" style={{ padding: '1.5rem' }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1f1f1f', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Smartphone size={18} color="#0284c7" /> Device Distribution
           </h3>
 
-          <div style={{ width: '100%', height: '280px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {devicePieData.length === 0 ? (
-              <p style={{ color: 'var(--text-dim)' }}>No device data recorded yet</p>
-            ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={devicePieData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={95}
-                    paddingAngle={5}
-                    dataKey="value"
-                    label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-                  >
-                    {devicePieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      background: 'rgba(18, 24, 38, 0.95)',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: '10px',
-                      color: '#fff'
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-        </div>
-
-        {/* Chart 3: Referrers Bar Chart */}
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Share2 size={18} color="#34d399" /> Traffic Sources & Referrers
-          </h3>
-
-          <div style={{ width: '100%', height: '280px' }}>
+          <div style={{ width: '100%', height: '260px' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={referrerBarData} layout="vertical">
-                <XAxis type="number" stroke="#6b7280" fontSize={12} />
-                <YAxis dataKey="name" type="category" stroke="#6b7280" fontSize={12} width={110} />
-                <Tooltip
-                  contentStyle={{
-                    background: 'rgba(18, 24, 38, 0.95)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '10px',
-                    color: '#fff'
-                  }}
-                />
-                <Bar dataKey="clicks" fill="#10b981" radius={[0, 6, 6, 0]} />
-              </BarChart>
+              <PieChart>
+                <Pie
+                  data={devicePieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={55}
+                  outerRadius={90}
+                  paddingAngle={4}
+                  dataKey="value"
+                  label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                >
+                  {devicePieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={{ background: '#ffffff', border: '1px solid #dadce0', borderRadius: '8px', color: '#1f1f1f' }} />
+              </PieChart>
             </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Chart 4: Geographic Demographics */}
-        <div className="glass-panel" style={{ padding: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Globe size={18} color="#c084fc" /> Top Geographic Locations
-          </h3>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            {countryBarData.length === 0 ? (
-              <p style={{ color: 'var(--text-dim)' }}>No country data yet</p>
-            ) : (
-              countryBarData.slice(0, 5).map((item, idx) => {
-                const maxCount = countryBarData[0].count || 1;
-                const pct = ((item.count / maxCount) * 100).toFixed(0);
-
-                return (
-                  <div key={item.country}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', marginBottom: '0.3rem' }}>
-                      <span style={{ color: '#fff', fontWeight: 500 }}>{item.country}</span>
-                      <span style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{item.count} clicks</span>
-                    </div>
-                    <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', overflow: 'hidden' }}>
-                      <div
-                        style={{
-                          width: `${pct}%`,
-                          height: '100%',
-                          background: 'linear-gradient(90deg, #a855f7 0%, #06b6d4 100%)',
-                          borderRadius: '4px',
-                          transition: 'width 0.5s ease-out'
-                        }}
-                      />
-                    </div>
-                  </div>
-                );
-              })
-            )}
           </div>
         </div>
       </div>

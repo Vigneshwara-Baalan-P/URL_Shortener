@@ -4,14 +4,10 @@ import {
   Compass, 
   ArrowRight, 
   Lock, 
-  AlertTriangle, 
   CheckCircle2, 
   ExternalLink, 
   Globe, 
-  ShieldCheck, 
-  Clock, 
-  Sparkles,
-  Search
+  Clock 
 } from 'lucide-react';
 
 export const RedirectSimulator = () => {
@@ -28,7 +24,6 @@ export const RedirectSimulator = () => {
       return;
     }
 
-    // Clean prefix if user typed snap.link/code
     const cleanCode = codeToTest.replace(/^https?:\/\/(snap\.link\/)?/i, '').trim();
     setTestedCode(cleanCode);
 
@@ -36,62 +31,41 @@ export const RedirectSimulator = () => {
     setSimulationResult(result);
 
     if (result.success) {
-      addToast(`Redirection simulated! Logged click hit for "${cleanCode}".`, 'success');
+      addToast(`Redirection simulated! Click hit recorded.`, 'success');
     }
   };
 
   return (
-    <div style={{ maxWidth: '840px', margin: '0 auto', padding: '2rem 1rem' }}>
-      {/* Header */}
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem 1rem' }}>
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.4rem 1rem',
-            borderRadius: '999px',
-            background: 'rgba(6, 182, 212, 0.12)',
-            border: '1px solid rgba(6, 182, 212, 0.25)',
-            color: '#22d3ee',
-            fontSize: '0.85rem',
-            fontWeight: 600,
-            marginBottom: '1rem'
-          }}
-        >
-          <Compass size={14} /> Interactive Link Redirection Tester
-        </div>
-
-        <h1 style={{ fontSize: '2.2rem', fontWeight: 800, color: '#fff', marginBottom: '0.5rem' }}>
-          Short Link <span className="gradient-text">Redirect Simulator</span>
+        <h1 style={{ fontSize: '2.2rem', fontWeight: 700, color: '#1f1f1f', marginBottom: '0.5rem' }}>
+          Short Link Redirect Simulator
         </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', maxWidth: '520px', margin: '0 auto' }}>
-          Test short link routing directly in your browser. Verify passcode authentication, expiration checks, and see analytics update live!
+        <p style={{ color: '#444746', fontSize: '0.95rem', maxWidth: '520px', margin: '0 auto' }}>
+          Test routing, password prompts, and expiration checks directly inside your browser.
         </p>
       </div>
 
-      {/* Simulator Control Box */}
-      <div className="glass-panel" style={{ padding: '2rem', marginBottom: '1.5rem' }}>
-        {/* Address Bar UI */}
+      <div className="google-card" style={{ padding: '2rem', marginBottom: '1.5rem' }}>
         <div
           style={{
-            background: 'rgba(10, 15, 26, 0.85)',
-            border: '1px solid var(--border-glow)',
-            borderRadius: '14px',
-            padding: '0.75rem 1rem',
+            background: '#f8f9fa',
+            border: '1px solid #dadce0',
+            borderRadius: '24px',
+            padding: '0.65rem 1rem',
             display: 'flex',
             alignItems: 'center',
             gap: '0.75rem',
             marginBottom: '1.25rem'
           }}
         >
-          <Globe size={18} color="#06b6d4" />
-          <span style={{ color: 'var(--text-dim)', fontSize: '0.9rem', fontWeight: 600 }}>
+          <Globe size={18} color="#0b57d0" />
+          <span style={{ color: '#5f6368', fontSize: '0.9rem', fontWeight: 500 }}>
             https://snap.link/
           </span>
           <input
             type="text"
-            className="glass-input"
+            className="google-input"
             value={inputCode}
             onChange={(e) => setInputCode(e.target.value)}
             placeholder="enter-code"
@@ -99,24 +73,23 @@ export const RedirectSimulator = () => {
               padding: '0.35rem 0.65rem',
               fontFamily: 'var(--font-mono)',
               fontWeight: 700,
-              color: '#38bdf8',
+              color: '#0b57d0',
               border: 'none',
               background: 'transparent'
             }}
           />
           <button
             onClick={() => handleRunSimulation()}
-            className="btn-primary"
+            className="btn-google"
             style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}
           >
-            <span>Simulate Visit</span>
+            <span>Test Visit</span>
             <ArrowRight size={14} />
           </button>
         </div>
 
-        {/* Quick Test Shortcuts */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)', fontWeight: 600 }}>Try Preset Links:</span>
+          <span style={{ fontSize: '0.78rem', color: '#747775', fontWeight: 600 }}>Try Presets:</span>
           {urls.map((u) => (
             <button
               key={u.id}
@@ -126,11 +99,11 @@ export const RedirectSimulator = () => {
                 handleRunSimulation(u.shortCode, '');
               }}
               style={{
-                background: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid var(--border-color)',
-                color: 'var(--text-muted)',
+                background: '#f1f3f4',
+                border: '1px solid #dadce0',
+                color: '#444746',
                 padding: '0.25rem 0.65rem',
-                borderRadius: '8px',
+                borderRadius: '12px',
                 fontSize: '0.75rem',
                 cursor: 'pointer',
                 display: 'inline-flex',
@@ -138,50 +111,38 @@ export const RedirectSimulator = () => {
                 gap: '0.3rem'
               }}
             >
-              {u.password && <Lock size={10} color="#fbbf24" />}
+              {u.password && <Lock size={10} color="#b45309" />}
               {u.shortCode}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Simulation Result Output Display */}
       {simulationResult && (
         <div className="animate-fade-in">
-          {/* Case 1: Passcode Required Error */}
           {simulationResult.needsPassword && (
-            <div
-              className="glass-panel"
-              style={{
-                padding: '2rem',
-                background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(18, 24, 38, 0.9) 100%)',
-                border: '1px solid rgba(245, 158, 11, 0.4)'
-              }}
-            >
+            <div className="google-card" style={{ padding: '2rem', border: '1px solid #b45309' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                <div style={{ background: 'rgba(245, 158, 11, 0.2)', padding: '0.5rem', borderRadius: '12px' }}>
-                  <Lock size={24} color="#fbbf24" />
-                </div>
+                <Lock size={24} color="#b45309" />
                 <div>
-                  <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#fff' }}>Passcode Protection Required</h3>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                    Link <code style={{ color: '#fbbf24' }}>snap.link/{testedCode}</code> is encrypted. Enter passcode to proceed.
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#1f1f1f' }}>Passcode Protection Required</h3>
+                  <p style={{ fontSize: '0.85rem', color: '#444746' }}>
+                    Link <strong>snap.link/{testedCode}</strong> requires a passcode.
                   </p>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '0.75rem', maxWidth: '420px', marginTop: '1rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', maxWidth: '400px' }}>
                 <input
                   type="password"
-                  className="glass-input"
-                  placeholder="Enter passcode (e.g. pass123)"
+                  className="google-input"
+                  placeholder="Enter passcode..."
                   value={passwordInput}
                   onChange={(e) => setPasswordInput(e.target.value)}
                 />
                 <button
-                  className="btn-primary"
+                  className="btn-google"
                   onClick={() => handleRunSimulation(testedCode, passwordInput)}
-                  style={{ background: '#f59e0b' }}
                 >
                   Unlock
                 </button>
@@ -189,94 +150,45 @@ export const RedirectSimulator = () => {
             </div>
           )}
 
-          {/* Case 2: Link Expired */}
           {simulationResult.isExpired && (
-            <div
-              className="glass-panel"
-              style={{
-                padding: '2rem',
-                background: 'linear-gradient(135deg, rgba(244, 63, 94, 0.1) 0%, rgba(18, 24, 38, 0.9) 100%)',
-                border: '1px solid rgba(244, 63, 94, 0.4)'
-              }}
-            >
+            <div className="google-card" style={{ padding: '2rem', border: '1px solid #b3261e' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ background: 'rgba(244, 63, 94, 0.2)', padding: '0.5rem', borderRadius: '12px' }}>
-                  <Clock size={24} color="#fb7185" />
-                </div>
+                <Clock size={24} color="#b3261e" />
                 <div>
-                  <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#fff' }}>Link Has Expired</h3>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                    This short URL reached its configured expiration date and is no longer serving redirects.
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#b3261e' }}>Link Expired</h3>
+                  <p style={{ fontSize: '0.85rem', color: '#444746' }}>
+                    This short URL reached its configured expiration date.
                   </p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Case 3: Invalid code */}
-          {!simulationResult.success && !simulationResult.needsPassword && !simulationResult.isExpired && (
-            <div
-              className="glass-panel"
-              style={{
-                padding: '2rem',
-                background: 'rgba(244, 63, 94, 0.08)',
-                border: '1px solid rgba(244, 63, 94, 0.3)'
-              }}
-            >
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fb7185' }}>404 Not Found</h3>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
-                No active short link matches code <strong>"{testedCode}"</strong>.
-              </p>
-            </div>
-          )}
-
-          {/* Case 4: Success Redirection */}
           {simulationResult.success && (
-            <div
-              className="glass-panel"
-              style={{
-                padding: '2rem',
-                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 182, 212, 0.08) 100%)',
-                border: '1px solid rgba(16, 185, 129, 0.4)'
-              }}
-            >
+            <div className="google-card" style={{ padding: '2rem', border: '1px solid #146c2e' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <CheckCircle2 size={24} color="#34d399" />
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#fff' }}>
-                    Redirect Successful!
+                  <CheckCircle2 size={24} color="#146c2e" />
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#1f1f1f' }}>
+                    Redirection Successful!
                   </h3>
                 </div>
-                <span className="badge badge-emerald">Hit Logged to Analytics</span>
+                <span className="google-badge badge-green">Click Hit Recorded</span>
               </div>
 
-              <div
-                style={{
-                  background: 'rgba(10, 15, 26, 0.8)',
-                  padding: '1rem 1.25rem',
-                  borderRadius: '12px',
-                  marginBottom: '1.25rem',
-                  border: '1px solid rgba(255, 255, 255, 0.08)'
-                }}
-              >
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: '0.2rem' }}>
-                  Destination URL:
-                </div>
-                <div style={{ fontSize: '1.05rem', fontWeight: 600, color: '#38bdf8', wordBreak: 'break-all' }}>
+              <div style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '12px', marginBottom: '1.25rem', border: '1px solid #dadce0' }}>
+                <div style={{ fontSize: '0.78rem', color: '#747775', marginBottom: '0.2rem' }}>Destination URL:</div>
+                <div style={{ fontSize: '1.02rem', fontWeight: 600, color: '#0b57d0', wordBreak: 'break-all' }}>
                   {simulationResult.targetUrl}
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <button
-                  className="btn-primary"
-                  onClick={() => window.open(simulationResult.targetUrl, '_blank')}
-                  style={{ background: '#10b981' }}
-                >
-                  <ExternalLink size={16} /> Open Destination Website
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <button className="btn-google" onClick={() => window.open(simulationResult.targetUrl, '_blank')}>
+                  <ExternalLink size={16} /> Open Destination Webpage
                 </button>
                 <button
-                  className="btn-secondary"
+                  className="btn-google-outlined"
                   onClick={() => {
                     setSelectedUrlForAnalytics(simulationResult.link.id);
                     setActiveTab('analytics');

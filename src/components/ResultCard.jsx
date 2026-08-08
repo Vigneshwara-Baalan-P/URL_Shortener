@@ -8,13 +8,12 @@ import {
   Share2, 
   Lock, 
   Clock, 
-  Tag, 
   Sparkles,
   Compass
 } from 'lucide-react';
 
 export const ResultCard = ({ urlObj }) => {
-  const { addToast, setActiveQrModalUrl, setActiveTab, setSelectedUrlForAnalytics } = useUrl();
+  const { addToast, setActiveQrModalUrl, setActiveTab } = useUrl();
   const [copied, setCopied] = useState(false);
 
   if (!urlObj) return null;
@@ -22,7 +21,7 @@ export const ResultCard = ({ urlObj }) => {
   const handleCopy = () => {
     navigator.clipboard.writeText(urlObj.shortUrl);
     setCopied(true);
-    addToast('Short link copied to clipboard!', 'success');
+    addToast('Link copied to clipboard!', 'success');
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -41,35 +40,31 @@ export const ResultCard = ({ urlObj }) => {
 
   return (
     <div
-      className="glass-panel animate-fade-in"
+      className="google-card animate-fade-in"
       style={{
         padding: '1.75rem',
         marginTop: '1.5rem',
-        background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(6, 182, 212, 0.08) 100%)',
-        border: '1px solid rgba(99, 102, 241, 0.3)',
-        borderRadius: '20px',
-        boxShadow: '0 12px 35px rgba(99, 102, 241, 0.15)'
+        background: '#ffffff',
+        border: '1px solid #c2e7ff'
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Sparkles size={18} color="#818cf8" />
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff' }}>
-            Shortened Link Created!
+          <Sparkles size={18} color="#0b57d0" />
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1f1f1f' }}>
+            Your Shortened URL is Ready!
           </h3>
         </div>
-        <span className="badge badge-emerald">
-          <Check size={12} /> Active
-        </span>
+        <span className="google-badge badge-green">Active</span>
       </div>
 
-      {/* Main Short URL Banner Box */}
+      {/* Main Short URL Box */}
       <div
         style={{
-          background: 'rgba(10, 15, 26, 0.85)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          borderRadius: '14px',
-          padding: '1rem 1.25rem',
+          background: '#f8f9fa',
+          border: '1px solid #dadce0',
+          borderRadius: '16px',
+          padding: '1.25rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -79,16 +74,15 @@ export const ResultCard = ({ urlObj }) => {
         }}
       >
         <div style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginBottom: '0.2rem' }}>
-            Destination: <span style={{ color: 'var(--text-muted)' }}>{urlObj.longUrl}</span>
+          <div style={{ fontSize: '0.78rem', color: '#747775', marginBottom: '0.2rem' }}>
+            Original Destination: <span style={{ color: '#444746' }}>{urlObj.longUrl}</span>
           </div>
           <div
             style={{
-              fontSize: '1.35rem',
+              fontSize: '1.4rem',
               fontWeight: 700,
-              color: '#38bdf8',
-              fontFamily: 'var(--font-mono)',
-              letterSpacing: '-0.3px'
+              color: '#0b57d0',
+              fontFamily: 'var(--font-mono)'
             }}
           >
             {urlObj.shortUrl}
@@ -98,29 +92,29 @@ export const ResultCard = ({ urlObj }) => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           <button
             onClick={handleCopy}
-            className="btn-primary"
+            className="btn-google"
             style={{
-              padding: '0.65rem 1.25rem',
+              padding: '0.65rem 1.35rem',
               fontSize: '0.9rem',
-              background: copied ? '#10b981' : undefined
+              background: copied ? '#146c2e' : undefined
             }}
           >
             {copied ? <Check size={16} /> : <Copy size={16} />}
-            <span>{copied ? 'Copied!' : 'Copy Link'}</span>
+            <span>{copied ? 'Copied' : 'Copy Link'}</span>
           </button>
 
           <button
             onClick={() => setActiveQrModalUrl(urlObj)}
-            className="btn-secondary"
-            title="Generate & Customize QR Code"
+            className="btn-google-outlined"
+            title="QR Code Studio"
           >
-            <QrCode size={18} color="#06b6d4" />
-            <span style={{ fontSize: '0.85rem' }}>QR Code</span>
+            <QrCode size={18} />
+            <span>QR Code</span>
           </button>
         </div>
       </div>
 
-      {/* Details Meta Row & Quick Actions */}
+      {/* Details Row */}
       <div
         style={{
           display: 'flex',
@@ -129,66 +123,76 @@ export const ResultCard = ({ urlObj }) => {
           flexWrap: 'wrap',
           gap: '1rem',
           fontSize: '0.85rem',
-          color: 'var(--text-muted)'
+          color: '#444746'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           {urlObj.password && (
-            <span className="badge badge-amber" title="Passcode Protected">
-              <Lock size={12} /> Protected
+            <span className="google-badge badge-blue">
+              <Lock size={12} /> Passcode Protected
             </span>
           )}
           {urlObj.expiresAt && (
-            <span className="badge badge-rose" title={`Expires on ${new Date(urlObj.expiresAt).toLocaleDateString()}`}>
+            <span className="google-badge badge-red">
               <Clock size={12} /> Expiring
             </span>
-          )}
-          {urlObj.tags && urlObj.tags.length > 0 && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Tag size={14} color="#818cf8" />
-              {urlObj.tags.map((t, idx) => (
-                <span
-                  key={idx}
-                  style={{
-                    background: 'rgba(255,255,255,0.06)',
-                    padding: '0.15rem 0.5rem',
-                    borderRadius: '6px',
-                    fontSize: '0.75rem'
-                  }}
-                >
-                  #{t}
-                </span>
-              ))}
-            </div>
           )}
         </div>
 
         {/* Action Shortcuts */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button
-            onClick={() => {
-              setActiveTab('simulator');
-            }}
+            onClick={() => setActiveTab('simulator')}
             style={{
               background: 'none',
               border: 'none',
-              color: '#06b6d4',
+              color: '#0b57d0',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '0.35rem',
-              fontWeight: 500
+              fontWeight: 500,
+              fontSize: '0.85rem'
             }}
           >
             <Compass size={14} /> Test in Simulator
           </button>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Share:</span>
-            <button className="btn-icon" onClick={() => handleShare('twitter')} title="Share on Twitter / X">
+            <button
+              onClick={() => handleShare('twitter')}
+              style={{
+                background: '#f1f3f4',
+                border: 'none',
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#444746',
+                cursor: 'pointer'
+              }}
+              title="Share on Twitter"
+            >
               <Share2 size={14} />
             </button>
-            <button className="btn-icon" onClick={() => window.open(urlObj.longUrl, '_blank')} title="Open target website directly">
+            <button
+              onClick={() => window.open(urlObj.longUrl, '_blank')}
+              style={{
+                background: '#f1f3f4',
+                border: 'none',
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#444746',
+                cursor: 'pointer'
+              }}
+              title="Visit Destination URL"
+            >
               <ExternalLink size={14} />
             </button>
           </div>
